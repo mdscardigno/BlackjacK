@@ -8,9 +8,9 @@ namespace BlackjacK
     {
         static void DisplayGreeting()
         {
-            Console.WriteLine("------------------------------");
-            Console.WriteLine("Hello and Welcome to Blackjack");
-            Console.WriteLine("------------------------------");
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("Hello and Welcome to Blackjack \u2663 \u2660 \u2665 \u2666 ");
+            Console.WriteLine("--------------------------------------");
         }
 
         //classess to use
