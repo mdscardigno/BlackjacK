@@ -29,9 +29,11 @@ The total card value is added up at the beginning when the player and the dealer
 The sum of the value of the cards shall be the total of the points assigned to each card.
 If dealer gets a 17, he/she stands. If the player is closer to 21 than the dealer, the player wins.
 If the player busted, dealer wins.
+If player or dealer get a 1 or a 11, its blackjack.
 Card points are as follow:
 Ace, King, Queen, King = 10 points each.
 Cards 2 through 10 = 1 point.
+
 Validate understanding of the problem
 **** Data Structure ****
 How we represent data that we will work with when converting the input to output.

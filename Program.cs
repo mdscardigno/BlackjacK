@@ -12,8 +12,9 @@ namespace BlackjacK
 
         public Card(string cardFace, string cardSuit)//Constructor
         {
-            rank = cardFace;
-            suit = cardSuit;
+            var rank = cardFace;
+            var suit = cardSuit;
+            var value = 0;
         }
         public override string ToString()
         {
@@ -88,8 +89,8 @@ namespace BlackjacK
             Random rng = new Random();
             int playerHandValue = 0;
             int dealerHandValue = 0;
-            bool busted;
-            bool beatDealer;
+            bool busted = false;
+            bool beatDealer = false;
             int cardValue;
             bool hasAce = false;
             do
@@ -129,7 +130,7 @@ namespace BlackjacK
             }
 
             //classess to use
-            static void Main(string[] args)
+            public static void Main(string[] args)
             {
                 int playerScore = 0;
                 int dealerScore = 0;
