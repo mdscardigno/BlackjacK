@@ -1,170 +1,144 @@
 ﻿using System;
-using System.Text;
-using System.Threading;
 using System.Collections.Generic;
-
-namespace BlackjacK
+namespace Blackjack
 {
-    public class Card
+    class Program
     {
-        private string rank;
-        private string suit;
-
-        public Card(string cardFace, string cardSuit)//Constructor
+        static void Main(string[] args)
         {
-            var rank = cardFace;
-            var suit = cardSuit;
-            var value = 0;
-        }
-        public override string ToString()
-        {
-            // return rank.ToString();
-            return rank + " of " + suit;
-        }
-    }
-    class Deck
-    {
-        private Card[] deck;//deck of the Card class
-        private int currentCard;//where we are at on our deck
-        private const int NUMBER_OF_CARDS = 52;
-        private Random ranNum;
-
-        public Deck()
-        {
-            deck = new Card[NUMBER_OF_CARDS];
-            currentCard = 0;
-            ranNum = new Random();
-
-            string[] rank = {
-                "Ace", "2", "3", "4", "5", "6",
-                "7", "8", "9", "10", "Jack", "Queen", "King" };
-
-            string[] suits = {
-                "Clubs", "Diamonds", "Hearts", "Spades"
-            };
-
-            for (int count = 0; count < deck.Length; count++)//populate the deck of cards
+            var myCard = new Card("Ace of Spades", 11);
+            Console.WriteLine($"Welcome to Blackjack! You card is: {myCard.Name}");
+            bool continuePlaying = false;
+            //Main game loop
+            while (continuePlaying)
             {
-                //deck location starting at 0
-                deck[count] = new Card(rank[count % 11], suits[count / 13]);
-            };
-        }
-        public Card DealCard()
-        {
-            //making sure we are within range or how the total number of cards
-            if (currentCard < deck.Length)
-            {
-                Console.Write(deck[currentCard]);
-                return deck[currentCard];//return the next card in the deck
-            }
-            else { return null; }
-        }
-        public void Shuffle()
-        {
-            currentCard = 0;
-            for (int first = 0; first < deck.Length; first++)
-            {
-                //pulling one of the 52 cards from the deck
-                int second = ranNum.Next(NUMBER_OF_CARDS);
-                //storing value of the card temporarily 
-                //swapping cards
-                Card temp = deck[first];
-                deck[first] = deck[second];
-                deck[second] = temp;
-            }
-        }
-        // public class Hand
-        // {
-        //     public bool hasBusted
-        //     {
-        //         cardsValue =List<Card> Cards { get; set; }
-        //         get
-        //         {
-        //             return Cards.Sum(card > 21;
-        //         }
-        //     }
-        // }
-        private static bool PlayHand()
-        {
-            Random rng = new Random();
-            int playerHandValue = 0;
-            int dealerHandValue = 0;
-            bool busted = false;
-            bool beatDealer = false;
-            int cardValue;
-            bool hasAce = false;
-            do
-            {
-                cardValue = rng.Next(1, 11);
-                // if (cardValue == 1 || cardValue == 11 || hasAce || cardValue + playerHandValue > 21)
-                // {
-                //     hasAce = true;
-                // }
-                // else
-                // {
+                //creating the starting deck
+                List<Card> deck = generateListDeck();
+                //shuffle and create a stack of cards for playing
+                Stack<Card> playingDeck = shuffleDeck(deck);
+                //create starting deck
+                //deal hands for player and dealer
+                List<Card> playerHand = new List<Card>() { };
+                List<Card> dealerHand = new List<Card>() { };
+                int playerHandValue = 0;
+                int dealerHandValue = 0;
+                playerHand.Insert(0, playingDeck.Pop());
+                dealerHand.Insert(0, playingDeck.Pop());
+                playerHand.Insert(0, playingDeck.Pop());
+                // dealerHand.Insert(0, playingDeck.Pop());
 
-                // }
-                playerHandValue += cardValue;
-                playerHandValue += rng.Next(11, 11);
-                playerHandValue = rng.Next(11, 11);
-                Console.WriteLine($"You have a hand of: {playerHandValue}");
-
-            } while (!busted || !beatDealer);
-            return playerHandValue;
-        }
-        private static bool WantsToPlay()
-        {
-            Console.WriteLine("Would you like to play Blackjack?: \nY/N");
-            bool isPlaying = Console.ReadLine().ToString().Trim().ToLower() == "Y";
-            Console.Clear();
-            return isPlaying;
-        }
-
-        class Program
-        {
-            static void DisplayGreeting()
-            {
-                Console.WriteLine("----------------------------------------------------");
-                Console.WriteLine(" 🂪🂺 ♦️ \u2660 \u2660 Hello and Welcome to Blackjack \u2665 \u2666 🂱🂷");
-                Console.WriteLine("----------------------------------------------------");
-            }
-
-            //classess to use
-            public static void Main(string[] args)
-            {
-                int playerScore = 0;
-                int dealerScore = 0;
-                bool isPlaying;
-                bool playerWin;
-                // bool isBusted;
-                isPlaying = WantsToPlay();
-                while (isPlaying)
+                //Show player their cards
+                Console.WriteLine("Your hand: ");
+                foreach (Card card in playerHand)
                 {
-                    isPlaying = WantsToPlay();
-                    playerWin = PlayHand();
-                    if (playerWin)
+                    Console.WriteLine($"{card.Name} : {card.Value}");
+                    playerHandValue += card.Value;
+                }
+                Console.WriteLine($"Your total hand value: ");
+                //Show dealer's cards
+                Console.WriteLine($"Dealer cards is: {dealerHand[0].Name} with value {dealerHand[0].Value}");
+                dealerHandValue += dealerHand[0].Value;
+                //Loop
+                string playerResponse = "";
+                while (!(playerHandValue > 21 || playerResponse == "s"))
+                {
+                    //Ask the player to hit or stand until stand or bust (total handValue is > 21)
+                    Console.WriteLine("Would you like to (h)it or (s)tand: ");
+                    playerResponse = Console.ReadLine();
+                    if (playerResponse == "h")
                     {
-                        playerScore++;
-
+                        Card dealtCard = playingDeck.Pop();
+                        playerHand.Insert(playerHand.Count, dealtCard);
+                        playerHandValue += dealtCard.Value;
+                        Console.WriteLine($"You were dealt a {dealtCard.Name} and your new total hand value is: {playerHandValue}.");
                     }
-                    else
-                    {
-                        dealerScore++;
-                    }
-
+                }
+                //now we calculate if the player busted
+                if (playerHandValue > 21)
+                {
+                    Console.WriteLine("Uh Oh! You busted and lost. You went over 21. ");
+                    Console.WriteLine("Would you like to play again?: y/n?");
+                    continuePlaying = (Console.ReadLine() == "y") ? true : false;
+                    continue;
+                }
+                //dealer reveals hand and keeps hitting until handValue >=17
+                while (!(dealerHandValue > 17))
+                {
+                    Card dealtCard = playingDeck.Pop();
+                    dealerHand.Insert(dealerHand.Count, dealtCard);
+                    dealerHandValue += dealtCard.Value;
+                    Console.WriteLine($"The dealer dealt a {dealtCard.Name}, dealer total hand value is now: {dealerHandValue}.");
                 }
 
-                //Greeting the player
-                DisplayGreeting();
-                Deck newDeck = new Deck();//new deck
-                newDeck.Shuffle();// shuffle of the deck one data structure
-                for (int card = 0; card < 52; card++)
+
+                //LIFO Collection, last-in-first-out
+                // Stack<Card> deck = new Stack<Card>() { };
+                var suits = new List<string>() { "Clubs", "Diamonds", "Hearts", "Spades" };
+                var ranks = new List<string>() { "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King" };
+                var values = new List<int>() { 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 };
+                for (int rank = 0; rank < ranks.Count; rank++)
                 {
-                    Console.Write(newDeck.DealCard());//output card
-                                                      // if ((card + 1) % 4 == 0) { Console.WriteLine(); }
-                    Console.ReadLine();
+                    foreach (string suit in suits)
+                    {
+                        deck.Insert(0, new Card(ranks[rank] + " of" + suit, values[rank]));
+                        // deck.Push(new Card(ranks[rank] + " of" + suit, values[rank]));
+                    }
                 }
+                //Ask user if they want to play again, and se the continuePlaying variable to the response.
             }
         }
+        //Card Shuffler method
+        public static Stack<Card> shuffleDeck(List<Card> deck)
+        {
+            var randomNumberGenerator = new Random();
+            int leftIndex;
+            Card leftCard;
+            Card rightCard;
+
+            for (int rightIndex = deck.Count - 1; rightIndex > 0; rightIndex--)
+            {
+                leftIndex = randomNumberGenerator.Next(rightIndex + 1);
+
+                //Save cards in variables so we don't lose them!
+                leftCard = deck[leftIndex];
+                rightCard = deck[rightIndex];
+
+                //Swap
+                deck[leftIndex] = rightCard;
+                deck[rightIndex] = leftCard;
+            }
+
+            return new Stack<Card>(deck);
+        }
+
+        public static List<Card> generateListDeck()
+        {
+            List<Card> deck = new List<Card>() { };
+            var suits = new List<string>() { "Clubs", "Diamonds", "Hearts", "Spades" };
+            var ranks = new List<string>() { "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King" };
+            var values = new List<int>() { 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 };
+
+            for (int rank = 0; rank < ranks.Count; rank++)
+            {
+                foreach (string suit in suits)
+                {
+                    deck.Insert(0, new Card(ranks[rank] + " of " + suit, values[rank]));
+                }
+            }
+
+            return deck;
+        }
+    }//end of class program
+}//end of namespace
+
+class Card
+{
+    public string Name { get; set; }
+    public int Value { get; set; }
+    public Card(string newName, int newValue)
+    {
+        Name = newName;
+        Value = newValue;
     }
+
 }
