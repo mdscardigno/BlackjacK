@@ -26,9 +26,10 @@ namespace Blackjack
             {
                 //creating the starting deck
                 List<Card> deck = generateListDeck();
-                //shuffle and create a stack of cards for playing
+
+                //shuffle deck and create a stack of cards for playing
                 Stack<Card> playingDeck = shuffleDeck(deck);
-                //create starting deck
+
                 //deal hands for player and dealer
                 List<Card> playerHand = new List<Card>() { };
                 List<Card> dealerHand = new List<Card>() { };
@@ -105,24 +106,10 @@ namespace Blackjack
                 //We ask the player if they want to play again
                 Console.WriteLine("Would you like to play again? y/n ");
                 continuePlaying = (Console.ReadLine() == "y") ? true : false;
-
-                //LIFO Collection, last-in-first-out
-                // Stack<Card> deck = new Stack<Card>() { };
-                var suits = new List<string>() { "Clubs", "Diamonds", "Hearts", "Spades" };
-                var ranks = new List<string>() { "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King" };
-                var values = new List<int>() { 11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 };
-                for (int rank = 0; rank < ranks.Count; rank++)
-                {
-                    foreach (string suit in suits)
-                    {
-                        deck.Insert(0, new Card(ranks[rank] + " of" + suit, values[rank]));
-                        // deck.Push(new Card(ranks[rank] + " of" + suit, values[rank]));
-                    }
-                }
-                //Ask user if they want to play again, and se the continuePlaying variable to the response.
-            }//end of main loop
-        }//end of Main
+            }
+        }
         //Card Shuffler method
+        //LIFO Collection, last-in-first-out
         public static Stack<Card> shuffleDeck(List<Card> deck)
         {
             var randomNumberGenerator = new Random();
@@ -160,19 +147,17 @@ namespace Blackjack
                     deck.Insert(0, new Card(ranks[rank] + " of " + suit, values[rank]));
                 }
             }
-
             return deck;
         }
-    }//end of class program
-}//end of namespace
-
-class Card
-{
-    public string Name { get; set; }
-    public int Value { get; set; }
-    public Card(string newName, int newValue)
-    {
-        Name = newName;
-        Value = newValue;
     }
-}//end of class Card
+    class Card
+    {
+        public string Name { get; set; }
+        public int Value { get; set; }
+        public Card(string newName, int newValue)
+        {
+            Name = newName;
+            Value = newValue;
+        }
+    }//end of class Card
+}
