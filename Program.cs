@@ -6,9 +6,21 @@ namespace Blackjack
     {
         static void Main(string[] args)
         {
-            var myCard = new Card("Ace of Spades", 11);
-            Console.WriteLine($"Welcome to Blackjack! You card is: {myCard.Name}");
-            bool continuePlaying = false;
+            Console.Title = "ASCII Art";
+            string title = @"
+            ,   .     .                    .        ,-.  .         ,              ,   
+            | . |     |                    |        |  ) |         |    o         |   
+            | ) ) ,-. | ,-. ,-. ;-.-. ,-.  |-  ,-.  |-<  | ,-: ,-. | ,  , ,-: ,-. | , 
+            |/|/  |-' | |   | | | | | |-'  |   | |  |  ) | | | |   |<   | | | |   |<  
+            ' '   `-' ' `-' `-' ' ' ' `-'  `-' `-'  `-'  ' `-` `-' ' `  | `-` `-' ' ` 
+                                                                    -'             
+            ";
+            Console.WriteLine(title);
+            Console.WriteLine("Press any key to start the game!");
+            Console.ReadLine();
+            Console.Clear();
+
+            bool continuePlaying = true;
             //Main game loop
             while (continuePlaying)
             {
@@ -28,13 +40,13 @@ namespace Blackjack
                 // dealerHand.Insert(0, playingDeck.Pop());
 
                 //Show player their cards
-                Console.WriteLine("Your hand: ");
+                Console.Write("Your hand has a(n): ");
                 foreach (Card card in playerHand)
                 {
-                    Console.WriteLine($"{card.Name} : {card.Value}");
+                    Console.WriteLine($"{card.Name}, with a value of {card.Value}.");
                     playerHandValue += card.Value;
                 }
-                Console.WriteLine($"Your total hand value: ");
+                Console.WriteLine($"Your total hand value = {playerHandValue}");
                 //Show dealer's cards
                 Console.WriteLine($"Dealer cards is: {dealerHand[0].Name} with value {dealerHand[0].Value}");
                 dealerHandValue += dealerHand[0].Value;
@@ -50,10 +62,10 @@ namespace Blackjack
                         Card dealtCard = playingDeck.Pop();
                         playerHand.Insert(playerHand.Count, dealtCard);
                         playerHandValue += dealtCard.Value;
-                        Console.WriteLine($"You were dealt a {dealtCard.Name} and your new total hand value is: {playerHandValue}.");
+                        Console.WriteLine($"You were dealt a: {dealtCard.Name} and your new total hand value is: {playerHandValue}.");
                     }
                 }
-                //now we calculate if the player busted
+                //we calculate if the player busted
                 if (playerHandValue > 21)
                 {
                     Console.WriteLine("Uh Oh! You busted and lost. You went over 21. ");
@@ -69,7 +81,30 @@ namespace Blackjack
                     dealerHandValue += dealtCard.Value;
                     Console.WriteLine($"The dealer dealt a {dealtCard.Name}, dealer total hand value is now: {dealerHandValue}.");
                 }
+                //calculate if dealer bust
+                if (dealerHandValue > 21)
+                {
+                    Console.WriteLine("The dealer hand value is over 21. Player wins!");
+                    Console.WriteLine("Would you like to play again? y/n ");
+                    //checking if the response is "y". If no, the program continues running.
+                    continuePlaying = (Console.ReadLine() == "y") ? true : false;
+                    continue;
+                }
 
+                //calculate the winner
+                //if player hand value is greater than dealer hand value, player wins
+                if (playerHandValue > dealerHandValue)
+                {
+                    Console.WriteLine("Congratulations. You won!.");
+                }
+                //if player hand value is less than dealer's player looses.
+                else
+                {
+                    Console.WriteLine("Oh No! You lost.");
+                }
+                //We ask the player if they want to play again
+                Console.WriteLine("Would you like to play again? y/n ");
+                continuePlaying = (Console.ReadLine() == "y") ? true : false;
 
                 //LIFO Collection, last-in-first-out
                 // Stack<Card> deck = new Stack<Card>() { };
@@ -85,8 +120,8 @@ namespace Blackjack
                     }
                 }
                 //Ask user if they want to play again, and se the continuePlaying variable to the response.
-            }
-        }
+            }//end of main loop
+        }//end of Main
         //Card Shuffler method
         public static Stack<Card> shuffleDeck(List<Card> deck)
         {
@@ -140,5 +175,4 @@ class Card
         Name = newName;
         Value = newValue;
     }
-
-}
+}//end of class Card
