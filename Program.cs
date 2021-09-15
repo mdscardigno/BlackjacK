@@ -6,6 +6,7 @@ namespace Blackjack
     {
         static void Main(string[] args)
         {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Title = "ASCII Art";
             string title = @"
             ,   .     .                    .        ,-.  .         ,              ,   
@@ -16,6 +17,7 @@ namespace Blackjack
                                                                     -'             
             ";
             Console.WriteLine(title);
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Press any key to start the game!");
             Console.ReadLine();
             Console.Clear();
@@ -38,24 +40,36 @@ namespace Blackjack
                 playerHand.Insert(0, playingDeck.Pop());
                 dealerHand.Insert(0, playingDeck.Pop());
                 playerHand.Insert(0, playingDeck.Pop());
-                // dealerHand.Insert(0, playingDeck.Pop());
+                dealerHand.Insert(0, playingDeck.Pop());
 
                 //Show player their cards
-                Console.Write("Your hand has a(n): ");
+                Console.Write("You, the player has a hand with: ");
                 foreach (Card card in playerHand)
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"{card.Name}, with a value of {card.Value}.");
                     playerHandValue += card.Value;
                 }
-                Console.WriteLine($"Your total hand value = {playerHandValue}");
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.Write($"The value of your hand is = ");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"{playerHandValue}");
+                Console.WriteLine();
+
                 //Show dealer's cards
-                Console.WriteLine($"Dealer cards is: {dealerHand[0].Name} with value {dealerHand[0].Value}");
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine($"Dealer cards are a(n):");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"{dealerHand[0].Name} with value {dealerHand[0].Value}");
+                Console.WriteLine($"{dealerHand[1].Name} with value {dealerHand[1].Value}");
                 dealerHandValue += dealerHand[0].Value;
+                Console.WriteLine();
                 //Loop
                 string playerResponse = "";
                 while (!(playerHandValue > 21 || playerResponse == "s"))
                 {
                     //Ask the player to hit or stand until stand or bust (total handValue is > 21)
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
                     Console.WriteLine("Would you like to (h)it or (s)tand: ");
                     playerResponse = Console.ReadLine();
                     if (playerResponse == "h")
@@ -63,17 +77,23 @@ namespace Blackjack
                         Card dealtCard = playingDeck.Pop();
                         playerHand.Insert(playerHand.Count, dealtCard);
                         playerHandValue += dealtCard.Value;
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.WriteLine($"You were dealt a: {dealtCard.Name} and your new total hand value is: {playerHandValue}.");
                     }
                 }
+
                 //we calculate if the player busted
                 if (playerHandValue > 21)
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("Uh Oh! You busted and lost. You went over 21. ");
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    Console.WriteLine();
                     Console.WriteLine("Would you like to play again?: y/n?");
                     continuePlaying = (Console.ReadLine() == "y") ? true : false;
                     continue;
                 }
+
                 //dealer reveals hand and keeps hitting until handValue >=17
                 while (!(dealerHandValue > 17))
                 {
@@ -82,6 +102,7 @@ namespace Blackjack
                     dealerHandValue += dealtCard.Value;
                     Console.WriteLine($"The dealer dealt a {dealtCard.Name}, dealer total hand value is now: {dealerHandValue}.");
                 }
+
                 //calculate if dealer bust
                 if (dealerHandValue > 21)
                 {
@@ -101,8 +122,9 @@ namespace Blackjack
                 //if player hand value is less than dealer's player looses.
                 else
                 {
-                    Console.WriteLine("Oh No! You lost.");
+                    Console.WriteLine("Oh No! You lost 🙁.");
                 }
+
                 //We ask the player if they want to play again
                 Console.WriteLine("Would you like to play again? y/n ");
                 continuePlaying = (Console.ReadLine() == "y") ? true : false;
